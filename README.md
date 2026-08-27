@@ -18,15 +18,16 @@ La lógica de negocio y las decisiones de arquitectura son de autoría propia; l
 ## Capturas (ejemplo: Microsoft, 10-K 2026)
 
 16 años de reportes anuales disponibles, exportación individual o masiva (ZIP) a Excel, y exploración interactiva por año y tipo de estado contable.
+<img width="3440" height="1440" alt="image" src="https://github.com/user-attachments/assets/3f98d173-e21e-496f-9eea-de69d83e11af" />
 
 ### Income Statement
-![SEC Extractor - MSFT Income Statement](assets/01_income_statement_msft.png)
+<img width="3440" height="1440" alt="image" src="https://github.com/user-attachments/assets/181ba165-f806-4b5a-a3df-6a07cefb1024" />
 
 ### Balance Sheet
-![SEC Extractor - MSFT Balance Sheet](assets/02_balance_sheet_msft.png)
+<img width="3440" height="1440" alt="image" src="https://github.com/user-attachments/assets/564c3c57-c055-486b-a61a-68bc652b9ab0" />
 
 ### Cash Flow
-![SEC Extractor - MSFT Cash Flow](assets/03_cash_flow_msft.png)
+<img width="3440" height="1440" alt="image" src="https://github.com/user-attachments/assets/ed1ec386-dab8-484f-8e54-af1207d02ffd" />
 
 ## Qué resuelve — y por qué el alcance es el que es
 
