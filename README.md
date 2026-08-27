@@ -30,9 +30,9 @@ La lógica de negocio y las decisiones de arquitectura son de autoría propia; l
 
 ## Qué resuelve — y por qué el alcance es el que es
 
-La primera versión de este proyecto apuntaba a un motor de valuación completo (DCF, múltiplos comparables, ROIC ajustado a lo Damodaran) montado sobre los datos de SEC EDGAR. Al construirlo apareció un problema de fondo: la taxonomía XBRL de la SEC no está estandarizada entre emisores — cada empresa puede tagear sus partidas contables de forma distinta, lo que hacía frágil cualquier análisis automatizado sobre esos datos.
+La primera versión de este proyecto apuntaba a un motor de valuación completo (DCF, múltiplos comparables, ROIC ajustado a lo Damodaran) montado sobre los datos de SEC EDGAR. Al construirlo apareció un problema de fondo: la taxonomía XBRL entre emisores e histórica, lo que hacía frágil realizar cualquier análisis automatizado sobre esos datos.
 
-En lugar de forzar un análisis poco confiable sobre datos no estandarizados, el proyecto fue redefinido: hoy es una herramienta que **prioriza la integridad de la fuente** — ingesta directa, parseo estructurado y exportación limpia a Excel — dejando el análisis (DCF, comps, ratios) para hacerse manualmente sobre datos ya depurados. La misma decisión que aplico al auditar datos financieros: sin integridad de datos, no hay análisis posterior confiable.
+En lugar de forzar un análisis poco confiable sobre estos datos, el proyecto fue redefinido: hoy es una herramienta que **prioriza la integridad de la fuente** — ingesta directa, parseo estructurado y exportación limpia a Excel — dejando el análisis (DCF, comps, ratios) para hacerse manualmente. La misma decisión que aplico al auditar datos financieros: sin integridad de datos, no hay análisis posterior confiable.
 
 ## Lo que hace hoy
 
