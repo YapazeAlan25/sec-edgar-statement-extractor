@@ -37,7 +37,7 @@ En lugar de forzar un análisis poco confiable sobre estos datos, el proyecto fu
 
 ## Lo que hace hoy
 
-- Ingesta asíncrona desde SEC EDGAR respetando el rate-limit oficial (10 req/s) mediante control de concurrencia por semáforos.
+- Ingesta desde SEC EDGAR con un rate-limiter propio auto-limitado a 5 req/s (por debajo del máximo de 10 req/s que permite la SEC), con reintentos y backoff ante 429/errores de conexión.
 - Parser propio (sin dependencias externas) para interpretar archivos XBRL R-files y extraer estados contables y notas de forma estructurada.
 - Visor interactivo en Streamlit por ticker, año y tipo de estado contable.
 - Exportación a Excel individual (por año) o masiva (ZIP con todos los años disponibles).
@@ -46,7 +46,7 @@ En lugar de forzar un análisis poco confiable sobre estos datos, el proyecto fu
 
 | Capa | Tecnologías |
 |---|---|
-| Ingesta | aiohttp (async, con control de concurrencia) |
+| Ingesta | aiohttp, con rate-limiter propio y reintentos con backoff |
 | Parsing XBRL | Parser HTML propio (stdlib, sin BeautifulSoup) |
 | Almacenamiento | SQLite (índice de filings y estados) |
 | Exportación | openpyxl |
