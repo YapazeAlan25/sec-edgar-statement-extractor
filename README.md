@@ -14,7 +14,8 @@ Herramienta en Python para acceder a la fuente oficial (SEC EDGAR) de estados co
 Un pipeline propio de ingesta y estandarización de reportes 10-K/20-F/40-F directamente desde SEC EDGAR, con un visor en Streamlit que permite:
 - explorar Income Statement, Balance Sheet, Cash Flow, Stockholders' Equity y las notas a los estados contables de cualquier ticker (US-GAAP e IFRS),
 - ver cada estado contable en modo Absoluto, Horizontal (% variación interanual) o Vertical (% de una base común, detectada por tag XBRL real),
-- calcular un set de **ratios financieros clave** (rentabilidad, liquidez, solvencia, eficiencia) directamente sobre los tags XBRL, con **validación cruzada sistemática contra yfinance** — sin depender de proveedores de datos pagos.
+- calcular un set de **ratios financieros clave** (rentabilidad, liquidez, solvencia, eficiencia) directamente sobre los tags XBRL, con **validación cruzada sistemática contra yfinance**,
+- seguir las **transacciones de insiders** (Form 4, compras/ventas y grants de opciones) y los **eventos materiales** (8-K) de cualquier ticker — sin depender de proveedores de datos pagos.
 
 La lógica de negocio y las decisiones de arquitectura son de autoría propia; la implementación de código fue desarrollada con asistencia de agentes de IA (Claude, Gemini) bajo un enfoque de *AI-augmented development* — dirigido por criterio financiero, no por experiencia previa como programador.
 
@@ -42,6 +43,10 @@ Cada estado contable admite un segundo modo de lectura sin salir del filing orig
 Un set de ratios estilo Damodaran (rentabilidad, liquidez, solvencia, apalancamiento, eficiencia) calculado directamente sobre el Company Facts XBRL, con dos modos: Anual (estrictamente sobre 10-K/20-F/40-F) y Trimestral con TTM (Trailing Twelve Months para las métricas de flujo, valor puntual de cierre para las de balance). Cada ratio muestra qué tag XBRL exacto se usó para calcularlo, auditable con un clic contra el filing original.
 <!-- TODO: agregar captura -- tabla de Ratios Clave, modo Anual, con la columna "tag XBRL usado" visible -->
 
+### Insiders & Eventos
+Transacciones de insiders (Form 4, incluyendo enmiendas 4/A) parseadas del **XML estructurado** del filing original, no del HTML pre-renderizado — captura compras/ventas directas de acciones y también grants de opciones/RSUs (transacciones derivadas), con fecha, cargo del insider (oficial, director, accionista >10%), tipo de transacción, cantidad, precio y tenencia resultante. Debajo, los últimos 8-K (eventos materiales) con link directo al documento original — sin intentar estandarizarlos, ya que no tienen un formato de estado contable fijo.
+<!-- TODO: agregar captura -- tabla de transacciones Form 4 de un insider conocido, ej. un director vendiendo/ejerciendo opciones -->
+
 ## Qué resuelve — y por qué el alcance evolucionó
 
 La primera versión de este proyecto apuntaba a un motor de valuación completo (DCF, múltiplos comparables, ROIC ajustado a lo Damodaran) montado directamente sobre los datos de SEC EDGAR. Al construirlo apareció un problema de fondo: la taxonomía XBRL varía entre emisores y a lo largo del tiempo para la misma empresa, lo que hacía frágil cualquier análisis automatizado sobre esos datos sin resolver antes ese problema de raíz.
@@ -55,6 +60,7 @@ En lugar de forzar un análisis poco confiable, el proyecto se reconstruyó en d
 - Visor interactivo en Streamlit por ticker, año y tipo de estado contable, con modo Absoluto / Horizontal / Vertical por filing.
 - Motor de ratios financieros clave (Anual y Trimestral TTM), calculado sobre Company Facts XBRL con manejo explícito de los casos donde la taxonomía no es uniforme entre emisores.
 - Validación cruzada sistemática contra yfinance, sector por sector, con métricas de cobertura publicadas y cada divergencia real documentada (no descartada).
+- Transacciones de insiders (Form 4/4-A) parseadas del XML estructurado, y últimos eventos materiales (8-K) con link directo al filing original.
 - Exportación a Excel individual (por año) o masiva (ZIP con todos los años disponibles).
 
 ## Precisión de métricas: metodología de validación
