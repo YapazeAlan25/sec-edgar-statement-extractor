@@ -15,7 +15,8 @@ Un pipeline propio de ingesta y estandarización de reportes 10-K/20-F/40-F dire
 - explorar Income Statement, Balance Sheet, Cash Flow, Stockholders' Equity y las notas a los estados contables de cualquier ticker (US-GAAP e IFRS),
 - ver cada estado contable en modo Absoluto, Horizontal (% variación interanual) o Vertical (% de una base común, detectada por tag XBRL real),
 - calcular un set de **ratios financieros clave** (rentabilidad, liquidez, solvencia, eficiencia) directamente sobre los tags XBRL, con **validación cruzada sistemática contra yfinance**,
-- seguir las **transacciones de insiders** (Form 4, compras/ventas y grants de opciones) y los **eventos materiales** (8-K) de cualquier ticker — sin depender de proveedores de datos pagos.
+- seguir las **transacciones de insiders** (Form 4, compras/ventas y grants de opciones) y los **eventos materiales** (8-K) de cualquier ticker — sin depender de proveedores de datos pagos,
+- comparar cualquier tag XBRL contra **todas las empresas de EDGAR** que lo reportan en un período dado (comparables sectoriales vía la API de Frames), buscar **texto completo dentro de cualquier filing público desde 2001** (Full-Text Search), y ver el **feed diario de todos los filings** presentados ese día en toda la SEC, filtrable por tipo de formulario.
 
 La lógica de negocio y las decisiones de arquitectura son de autoría propia; la implementación de código fue desarrollada con asistencia de agentes de IA (Claude, Gemini) bajo un enfoque de *AI-augmented development* — dirigido por criterio financiero, no por experiencia previa como programador.
 
@@ -68,6 +69,9 @@ En lugar de forzar un análisis poco confiable, el proyecto se reconstruyó en d
 - Motor de ratios financieros clave (Anual y Trimestral TTM), calculado sobre Company Facts XBRL con manejo explícito de los casos donde la taxonomía no es uniforme entre emisores.
 - Validación cruzada sistemática contra yfinance, sector por sector, con métricas de cobertura publicadas y cada divergencia real documentada (no descartada).
 - Transacciones de insiders (Form 4/4-A) parseadas del XML estructurado, y últimos eventos materiales (8-K) con link directo al filing original.
+- Comparables sectoriales vía la API de Frames — un tag XBRL contra todas las empresas de EDGAR que lo reportan en un período dado, no solo el universo CEDEAR.
+- Búsqueda de texto completo dentro de todos los filings públicos desde 2001 (Full-Text Search API).
+- Feed diario de filings de toda la SEC, filtrable por tipo de formulario.
 - Exportación a Excel individual (por año) o masiva (ZIP con todos los años disponibles).
 
 ## Precisión de métricas: metodología de validación
@@ -89,6 +93,37 @@ Los datos se extraen **directamente de los filings oficiales XBRL** presentados 
 
 Cada gap por debajo del 100% tiene una causa raíz identificada y documentada (ej. empresas que reportan en moneda local sin conversión, corrimiento de año fiscal en cierres de enero/febrero, segmento financiero mezclado con el industrial, partidas que la propia empresa nunca tagea como concepto XBRL separado) — no son errores silenciosos, son límites conocidos y explicados de la fuente de datos.
 
+## Rigor de ingeniería y control de calidad
+
+El motor de ratios se audita **sector por sector**: para cada sector se regenera el catálogo empírico de tags XBRL realmente usados por las empresas ya ingeridas y se cruza contra los alias del motor — cada candidato se verifica contra datos reales antes de agregarlo, nunca por parecido de nombre. Respaldado por **96 tests automatizados**.
+
+**Progreso: 5 de 11 sectores auditados a fondo.**
+
+| Sector | Estado |
+|---|---|
+| Technology | ✅ Auditado |
+| Communication Services | ✅ Auditado |
+| Consumer Cyclical | ✅ Auditado |
+| Industrials | ✅ Auditado |
+| Basic Materials | ✅ Auditado |
+| Consumer Defensive | ❌ Pendiente |
+| Healthcare | ❌ Pendiente |
+| Energy | ❌ Pendiente |
+| Financial Services | ❌ Pendiente (no aplican las métricas estándar — requiere decidir alcance antes de auditar) |
+| Real Estate (REITs) | ❌ Pendiente |
+| Utilities | ❌ Pendiente |
+
+Algunos hallazgos reales, con impacto directo en los datos mostrados, detectados y corregidos durante estas auditorías:
+
+- **Margen Bruto y Operativo en 0% para Apple, Microsoft, Amazon y decenas más**: el alias `CostOfGoodsAndServicesSold` — el tag más usado por las empresas del S&P 500 para el Costo de Ventas — no estaba en la lista de alias del motor de ratios. Afectaba en silencio a toda métrica derivada del CoGS. Corregido, y se agregó Margen Operativo como métrica nueva (no existía en el panel).
+- **17 años de CapEx en cero para Corning (GLW)**: el motor asumía CapEx=$0 cuando no encontraba ningún tag conocido pero sí había Cash Flow from Operations, para no dejar la celda de Free Cash Flow vacía. Corning nunca reporta ninguno de los tags cubiertos — usa `PaymentsForCapitalImprovements`. Con la asunción de cero, el sistema mostraba CapEx=$0 y FCF=CFO durante 17 años seguidos para una empresa con CapEx real de +$1.000M/año. Se agregó el alias correcto y se revirtió la asunción: una celda sin dato ahora muestra "N/D" (honesto) en vez de un número con apariencia de real pero equivocado.
+- **Falso mismatch del 12.807% en D&A de First Solar (FSLR)**: no era un bug del motor de ratios sino del propio harness de validación contra yfinance — devolvía el resultado del primer alias con datos y nunca intentaba combinar el resto. FSLR cambia de tag de D&A en 2018; el harness se quedaba con la serie vieja (vacía desde 2018) y reportaba una diferencia falsa. Corregido para fusionar todos los alias, igual que ya hacía el motor de ratios principal.
+- **Bug de prioridad de alias — error de 208x en Accounts Payable (McEwen Mining, MUX)**: el motor tenía dos tags candidatos a "Accounts Payable total", y el que aparecía primero en la lista no siempre era el correcto — para MUX, el tag que sonaba a "total" era en realidad una sub-cuenta menor ($214K) mientras el tag real coincidente con yfinance era otro ($44.9M). Se reordenó la prioridad; la métrica pasó de 94.1% de cobertura correcta a 100%.
+- **Operating Income invisible para filers 100% IFRS (Stellantis, Ferrari)**: ninguna de las dos reporta ningún tag `us-gaap`, así que el motor —y el propio harness de validación— las trataba como "no elegibles": celda vacía en el 100% de su historial. Se agregó el tag IFRS correspondiente y se corrigió el harness para reconocer filers IFRS puros como elegibles.
+- **Una nota de auditoría anterior de este mismo README estaba documentada al revés, nunca verificada contra el dato real**: llegó a afirmar que el motor incluía de más la depreciación de flota de Avis Budget (CAR) en D&A. Al verificarlo contra el Company Facts real, era lo opuesto: CAR taguea esa depreciación (~$3.015M, el grueso real de su D&A) bajo un tag que el motor no cubría — faltaba ese monto, no sobraba. Corregido, y la nota original reescrita.
+
+Estos hallazgos surgen de auditar cada alias contra datos reales, sector por sector — no de pruebas puntuales aisladas.
+
 ## Stack técnico
 
 | Capa | Tecnologías |
@@ -100,7 +135,7 @@ Cada gap por debajo del 100% tiene una causa raíz identificada y documentada (e
 | Almacenamiento | SQLite (índice de filings y estados) |
 | Exportación | openpyxl |
 | Dashboard | Streamlit |
-| Tests | pytest — parser de R-files, motor de ratios, validación cruzada, formato numérico |
+| Tests | pytest (96 tests): parser de R-files, motor de ratios, validación cruzada contra yfinance, índice diario de EDGAR, parser de transacciones de insiders, cliente SEC, formato numérico |
 
 ## Contacto
 
