@@ -18,6 +18,8 @@ Un pipeline propio de ingesta y estandarización de reportes 10-K/20-F/40-F dire
 
 La lógica de negocio y las decisiones de arquitectura son de autoría propia; la implementación de código fue desarrollada con asistencia de agentes de IA (Claude, Gemini) bajo un enfoque de *AI-augmented development* — dirigido por criterio financiero, no por experiencia previa como programador.
 
+**Alcance actual: el universo CEDEAR.** El proyecto hoy estandariza y valida específicamente el universo de tickers que un inversor argentino puede adquirir como CEDEAR (Certificado de Depósito Argentino) — poco más de 300 empresas, un subconjunto acotado del total de emisores en SEC EDGAR (que son varios miles). Esta decisión de alcance es deliberada: permite auditar cada ticker a fondo, sector por sector, contra una fuente independiente (yfinance) y documentar cada divergencia real encontrada, algo mucho menos viable si el objetivo fuera cubrir el universo completo de la SEC de entrada.
+
 ## Capturas (ejemplo: Microsoft, 10-K 2026)
 
 16 años de reportes anuales disponibles, exportación individual o masiva (ZIP) a Excel, y exploración interactiva por año y tipo de estado contable.
@@ -59,7 +61,7 @@ En lugar de forzar un análisis poco confiable, el proyecto se reconstruyó en d
 
 Los datos se extraen **directamente de los filings oficiales XBRL** presentados a la SEC: máxima fidelidad a lo reportado, con divergencias respecto a plataformas comerciales documentadas caso por caso en vez de asumidas como error propio.
 
-**Benchmark (234 empresas, todos los sectores, contra yfinance):**
+**Benchmark (234 de los +300 tickers CEDEAR, todos los sectores, contra yfinance):**
 
 | Métrica | % OK vs yfinance |
 |---|---|
