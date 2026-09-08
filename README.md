@@ -24,7 +24,7 @@ La lógica de negocio y las decisiones de arquitectura son de autoría propia; l
 ## Capturas (ejemplo: Microsoft, 10-K 2026)
 
 16 años de reportes anuales disponibles, exportación individual o masiva (ZIP) a Excel, y exploración interactiva por año y tipo de estado contable.
-<img width="3440" height="1440" alt="image" src="https://github.com/user-attachments/assets/46493092-7b85-48a4-b0ac-f8df9031e4fe" />
+<img width="3439" height="1016" alt="image" src="https://github.com/user-attachments/assets/df104901-cf54-47e4-a7cc-b0dea757595f" />
 
 ### Income Statement
 <img width="3438" height="1305" alt="image" src="https://github.com/user-attachments/assets/070e4f47-ce8b-4376-a89a-c0325bf64c63" />
