@@ -25,6 +25,7 @@ La lógica de negocio y las decisiones de arquitectura son de autoría propia; l
 
 16 años de reportes anuales disponibles, exportación individual o masiva (ZIP) a Excel, y exploración interactiva por año y tipo de estado contable.
 <img width="3439" height="1016" alt="image" src="https://github.com/user-attachments/assets/df104901-cf54-47e4-a7cc-b0dea757595f" />
+<img width="2994" height="379" alt="image" src="https://github.com/user-attachments/assets/86152c44-6a15-44b5-b0fb-c5cead668ea4" />
 
 ### Income Statement
 <img width="3438" height="1305" alt="image" src="https://github.com/user-attachments/assets/070e4f47-ce8b-4376-a89a-c0325bf64c63" />
