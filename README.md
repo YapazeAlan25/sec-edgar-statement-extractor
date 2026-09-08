@@ -24,28 +24,34 @@ La lógica de negocio y las decisiones de arquitectura son de autoría propia; l
 ## Capturas (ejemplo: Microsoft, 10-K 2026)
 
 16 años de reportes anuales disponibles, exportación individual o masiva (ZIP) a Excel, y exploración interactiva por año y tipo de estado contable.
-<img width="3440" height="1440" alt="image" src="https://github.com/user-attachments/assets/3f98d173-e21e-496f-9eea-de69d83e11af" />
+<img width="3440" height="1440" alt="image" src="https://github.com/user-attachments/assets/46493092-7b85-48a4-b0ac-f8df9031e4fe" />
 
 ### Income Statement
-<img width="3440" height="1440" alt="image" src="https://github.com/user-attachments/assets/181ba165-f806-4b5a-a3df-6a07cefb1024" />
+<img width="3438" height="1305" alt="image" src="https://github.com/user-attachments/assets/070e4f47-ce8b-4376-a89a-c0325bf64c63" />
 
 ### Balance Sheet
-<img width="3440" height="1440" alt="image" src="https://github.com/user-attachments/assets/564c3c57-c055-486b-a61a-68bc652b9ab0" />
+<img width="3439" height="1302" alt="image" src="https://github.com/user-attachments/assets/d8d5696f-8f7c-4fd7-9208-855f35af0bd5" />
 
 ### Cash Flow
-<img width="3440" height="1440" alt="image" src="https://github.com/user-attachments/assets/ed1ec386-dab8-484f-8e54-af1207d02ffd" />
+<img width="3439" height="1306" alt="image" src="https://github.com/user-attachments/assets/4ca6218d-1634-44bb-9272-ae48e15fc3c6" />
+
+### Notas de los EECC
+<img width="3437" height="1305" alt="image" src="https://github.com/user-attachments/assets/be95d5b9-392c-4c09-b13d-14f84d13841e" />
 
 ### Análisis Horizontal y Vertical (por filing)
 Cada estado contable admite un segundo modo de lectura sin salir del filing original: Horizontal (% de variación interanual, con detección de cruce de signo — pérdida a ganancia o viceversa se marca "N/M" en vez de un % engañoso) y Vertical (% de Revenue en el Income Statement, % de Total Assets en el Balance Sheet — la base se detecta por el tag XBRL real de la fila, no por el texto de su label, así que funciona igual para un filer US-GAAP que para uno IFRS).
-<!-- TODO: agregar captura -- selector "Modo de análisis" en Horizontal y en Vertical, ej. sobre el Income Statement de una empresa con varios años -->
+<img width="3437" height="1307" alt="image" src="https://github.com/user-attachments/assets/a27ea2d2-9be9-40cc-b5fe-2a4aba485651" />
+<img width="3439" height="1118" alt="image" src="https://github.com/user-attachments/assets/0474ec0b-fff2-4693-8a5d-b5ff8240bf92" />
+<img width="3439" height="1301" alt="image" src="https://github.com/user-attachments/assets/0b0abf68-a320-4ad5-8795-51c5115956b6" />
 
 ### Ratios Clave — Anual y Trimestral (TTM)
 Un set de ratios estilo Damodaran (rentabilidad, liquidez, solvencia, apalancamiento, eficiencia) calculado directamente sobre el Company Facts XBRL, con dos modos: Anual (estrictamente sobre 10-K/20-F/40-F) y Trimestral con TTM (Trailing Twelve Months para las métricas de flujo, valor puntual de cierre para las de balance). Cada ratio muestra qué tag XBRL exacto se usó para calcularlo, auditable con un clic contra el filing original.
-<!-- TODO: agregar captura -- tabla de Ratios Clave, modo Anual, con la columna "tag XBRL usado" visible -->
+<img width="3437" height="1225" alt="image" src="https://github.com/user-attachments/assets/a2a72cb7-7712-4526-9b68-c30e83d7fb8c" />
+<img width="3433" height="1304" alt="image" src="https://github.com/user-attachments/assets/841c1605-6e68-4d2c-a385-e65ba6f417b9" />
 
 ### Insiders & Eventos
 Transacciones de insiders (Form 4, incluyendo enmiendas 4/A) parseadas del **XML estructurado** del filing original, no del HTML pre-renderizado — captura compras/ventas directas de acciones y también grants de opciones/RSUs (transacciones derivadas), con fecha, cargo del insider (oficial, director, accionista >10%), tipo de transacción, cantidad, precio y tenencia resultante. Debajo, los últimos 8-K (eventos materiales) con link directo al documento original — sin intentar estandarizarlos, ya que no tienen un formato de estado contable fijo.
-<!-- TODO: agregar captura -- tabla de transacciones Form 4 de un insider conocido, ej. un director vendiendo/ejerciendo opciones -->
+<img width="3436" height="1307" alt="image" src="https://github.com/user-attachments/assets/4b5cb88e-a981-452c-af39-093f0e32f391" />
 
 ## Qué resuelve — y por qué el alcance evolucionó
 
